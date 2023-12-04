@@ -143,10 +143,12 @@ class TestExamenStream {
 
             List<Oficina> list = oficinaHome.findAll();
 
-            //TODO STREAMS
-            var solList = list.stream();
+            List<String> listOfi = list.stream()
+                    .sorted(comparing((Oficina o) -> o.getCiudad()).reversed())
+                    .map(oficina -> "Ciudad: "+oficina.getCiudad()+", telefono: "+oficina.getTelefono())
+                    .collect(toList());
 
-            solList.forEach(System.out::println);
+            listOfi.forEach(System.out::println);
 
             oficinaHome.commitTransaction();
         } catch (RuntimeException e) {
@@ -161,7 +163,7 @@ class TestExamenStream {
      * TEST2
      * Devuelve un listado con el nombre, apellidos y email de los empleados cuyo jefe tiene un código de jefe igual a 7.
      */
-    @Test
+   /* @Test
     void test2() {
 
         EmpleadoHome empleadoHome = new EmpleadoHome();
@@ -172,7 +174,10 @@ class TestExamenStream {
             List<Empleado> list = empleadoHome.findAll();
 
             //TODO STREAMS
-            var solList = list.stream();
+            var solList = list.stream()
+                    .filter(empelado -> empelado.getJefe()!=null && empelado.getJefe().getCodigoEmpleado() = 7)
+                    .map((Empleado empleado) -> "Nombre: "+empleado.getNombre())+", apellidos: "+empleado.getApellido1()+" "+empleado.getApellido2()+", email: "+empleado.getEmail()
+                    .collect(toList());
 
             solList.forEach(System.out::println);
 
@@ -183,7 +188,7 @@ class TestExamenStream {
             throw e; // or display error message
         }
 
-    }
+    }*/
 
     /**
      * TEST3
@@ -200,7 +205,9 @@ class TestExamenStream {
             List<Cliente> list = clienteHome.findAll();
 
             //TODO STREAMS
-            var solList = list.stream();
+            var solList = list.stream()
+                    .map(cliente -> "Nombre: "+cliente.getNombreCliente()+", Nombre y apellido de su representante de ventas: "+cliente.getEmpleado().getNombre() + cliente.getEmpleado().getApellido1())
+                    .collect(toList());
 
             solList.forEach(System.out::println);
 
@@ -222,7 +229,7 @@ class TestExamenStream {
 
         PedidoHome PedidoHome = new PedidoHome();
 
-        try {
+        /*try {
             PedidoHome.beginTransaction();
 
             List<Pedido> list = PedidoHome.findAll();
@@ -237,17 +244,26 @@ class TestExamenStream {
                 throw new RuntimeException(e);
             }
 
-            //TODO STREAMS
-            var solList = list.stream();
+            try{
+                var solList = list.stream()
+                        .filter(pedido -> pedido.getEstado().equals("Rechazado") && pedido.getFechaPedido().after(fin2008) && pedido.getFechaPedido().before(inicio2010))
+                        .sorted(comparing((Pedido pedido) -> pedido.getFechaPedido()).reversed())
+                        .map((Pedido pedido) -> "Fecha: "+formateador.parse(pedido.getFechaPedido().toString()) +", nombre: "+ pedido.getCliente().getNombreCliente()+", estado: "+pedido.getEstado()+", representante: "+pedido.getCliente().getEmpleado().getNombre());
 
-            solList.forEach(System.out::println);
+                solList.forEach(System.out::println);
+            }
+            catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            //TODO STREAMS
+
 
             PedidoHome.commitTransaction();
         } catch (RuntimeException e) {
             e.printStackTrace();
             PedidoHome.rollbackTransaction();
             throw e; // or display error message
-        }
+        }*/
     }
 
     /**
